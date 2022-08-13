@@ -1,33 +1,57 @@
-import { Button, Grid, Switch } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
 import type { NextPage } from "next";
-import { useContext } from "react";
-import { CustomThemeContext } from "../components/CustomThemeProvider";
+import Link from "next/link";
+import Footer from "../components/common/Footer";
+import Header from "../components/common/Header";
 import MainLayout from "../components/MainLayout";
+import data from "../db/data";
 
 const Home: NextPage = () => {
-  const { darkMode, toggleMode } = useContext(CustomThemeContext);
   return (
     <MainLayout>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Grid item xs={3}>
-          <Button variant="contained">Hello World</Button>
+      <>
+        <Header path={["/"]} />
+        <Typography variant="h4" my={5}>
+          Products
+        </Typography>
+        <Grid container spacing={3} style={{ minHeight: "80vh" }}>
+          {data.products.map((product) => (
+            <Grid item md={4} key={product.name}>
+              <Card>
+                <Link href={`/product/${product.slug}`} passHref>
+                  <CardActionArea>
+                    <CardMedia
+                      style={{ maxHeight: "75vh" }}
+                      component="img"
+                      image={product.image}
+                      title={product.name}
+                    ></CardMedia>
+                    <CardContent>
+                      <Typography>{product.name}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Link>
+                <CardActions>
+                  <Typography>{product.price}</Typography>
+                  <Button size="small" color="primary">
+                    Add to Cart
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
-        <Grid item xs={3}>
-          <Switch
-            checked={darkMode == "light" ? false : true}
-            onClick={() => {
-              toggleMode();
-            }}
-          />
-        </Grid>
-      </Grid>
+        <Footer />
+      </>
     </MainLayout>
   );
 };
